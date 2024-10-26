@@ -1,37 +1,27 @@
 ﻿@page "/"
 @using Models.Dtos
 @using ToDoApp.Services
-@inject IItemService _ItemService
-<PageTitle>Home</PageTitle>
+@inject IItemService _itemService
+<PageTitle>Todo List</PageTitle>
 
-<h1>Hello, this is your todoList app!</h1>
+<h1>Hello, this is your Todo List app!</h1>
 Welcome to your new app.
 
-@foreach (var item in items)
-{
-<p>@item.Text</p>
-<p>@item.Deadline</p>
-<p>@item.Completed</p>
-}
-
-@if (items == null)
-{  
-   <p>Loading...</p>
-}
-else if (!items.Any())
-{
-   <p>No tasks found!</p>
+<ToDoItemForm OnChange="OnChange"/>
+@if (todoItems == null)
+{     
+   <p><em>Loading...</em></p>
 }
 else
 {
-   foreach (var item in items)
+  
+   foreach (var item in todoItems)
    {
-      <p>@item.Text</p>
-      <p>@item.Deadline</p>
-      <p>@item.Completed</p>
+      <div style="width: 280px;">@item.Text</div>
+      <div style="width: 280px;">@item.Deadline</div>
+      <div style="width: 280px;">@item.Completed</div>
    }
 }
-
 
 
 
@@ -39,10 +29,17 @@ else
 
 @code
 {
-   private IEnumerable<ToDoItemDto> items;
-
+   private IEnumerable<ToDoItemDto> todoItems;
+   
    protected override async Task OnInitializedAsync()
    {
-      items = await _ItemService.GetAllItems();
+      todoItems = await _itemService.GetAllItems();
    }
+
+   private async Task OnChange()
+   {
+      todoItems = await _itemService.GetAllItems();
+      StateHasChanged();
+   }
+
 }

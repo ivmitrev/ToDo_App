@@ -17,7 +17,7 @@ public class Program
                 policy  =>
                 {
                     policy.WithOrigins("https://localhost:7000"
-                        ,"https://localhost:7166");
+                        ,"https://localhost:7166").AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
                 });
         });
         
@@ -36,7 +36,6 @@ public class Program
 
         var app = builder.Build();
         
-        // zashto mi trqbva tova 
         app.UseCors(MyAllowSpecificOrigins);
         
         // Configure the HTTP request pipeline.

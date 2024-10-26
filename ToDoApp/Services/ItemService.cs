@@ -17,6 +17,7 @@ public class ItemService : IItemService
         try
         {
             var items = await this._httpClient.GetFromJsonAsync<IEnumerable<ToDoItemDto>>("api/items");
+            items.Reverse();
             return items;
         }
         catch (Exception e)

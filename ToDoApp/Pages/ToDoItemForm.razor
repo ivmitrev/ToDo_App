@@ -1,0 +1,40 @@
+﻿@using Models.Dtos
+@using ToDoApp.Services
+@inject IItemService _itemService
+
+<Editform Model="@NewTask">
+    <div style="display: flex;align-items: center;margin-top: 40px;padding-left:20px;padding-right: 20px;width: 700px">
+        <div style="margin-right:20px">Text: </div>
+        <InputText
+            @bind-Value="NewTask.Text"
+            class="form-control"/>
+        <div style="margin-left:40px; margin-right: 20px">Deadline: </div>
+        <InputDate
+            @bind-Value="@NewTask.Deadline"
+            class="form-control"/>
+        <button onclick="@TaskAdded" class="btn btn-primary" value="Add" style="margin-left: 20px">Add</button>
+        <button onclick="@Clear" class="btn btn-secondary" style="margin-left: 15px;">Clear</button>
+        
+    </div>
+
+</Editform>
+
+@code 
+{
+    [Parameter] public EventCallback OnChange { get; set; }
+    private CreateItemToDoDto NewTask = new CreateItemToDoDto();
+
+    public void Clear()
+    {
+        NewTask.Text = "";
+        NewTask.Deadline = DateOnly.FromDateTime(DateTime.Now);
+    }
+    
+    
+    public async Task TaskAdded()
+    {
+        await _itemService.CreateItem(NewTask);
+        await OnChange.InvokeAsync();
+    }
+
+}
