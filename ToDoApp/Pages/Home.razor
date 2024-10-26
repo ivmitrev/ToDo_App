@@ -1,6 +1,48 @@
 ﻿@page "/"
-
+@using Models.Dtos
+@using ToDoApp.Services
+@inject IItemService _ItemService
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, this is your todoList app!</h1>
 Welcome to your new app.
+
+@foreach (var item in items)
+{
+<p>@item.Text</p>
+<p>@item.Deadline</p>
+<p>@item.Completed</p>
+}
+
+@if (items == null)
+{  
+   <p>Loading...</p>
+}
+else if (!items.Any())
+{
+   <p>No tasks found!</p>
+}
+else
+{
+   foreach (var item in items)
+   {
+      <p>@item.Text</p>
+      <p>@item.Deadline</p>
+      <p>@item.Completed</p>
+   }
+}
+
+
+
+
+
+
+@code
+{
+   private IEnumerable<ToDoItemDto> items;
+
+   protected override async Task OnInitializedAsync()
+   {
+      items = await _ItemService.GetAllItems();
+   }
+}

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Models.Dtos;
 using TodoAppApi.Data;
 using TodoAppApi.Entities;
 
@@ -41,9 +42,7 @@ public class ItemRepository : IItemRepository
     {
         var item = await _dbContext.items.FindAsync(id);
         if (item == null) return null;
-
         
-        // taka li se pravi tuk da prisvoqvam
         item.Text = updatedItem.Text;
         item.Completed = updatedItem.Completed;
         item.Deadline = updatedItem.Deadline;
@@ -59,7 +58,7 @@ public class ItemRepository : IItemRepository
 
         if (item == null)
         {
-            return null;
+            return item;
         }
         _dbContext.items.Remove(item);
         await _dbContext.SaveChangesAsync();

@@ -9,7 +9,18 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
+        
+        var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(name: MyAllowSpecificOrigins,
+                policy  =>
+                {
+                    policy.WithOrigins("https://localhost:7000"
+                        ,"https://localhost:7166");
+                });
+        });
+        
         // Add services to the container.
         builder.Services.AddAuthorization();
 
@@ -24,14 +35,17 @@ public class Program
         builder.Services.AddSwaggerGen();
 
         var app = builder.Build();
-
+        
+        // zashto mi trqbva tova 
+        app.UseCors(MyAllowSpecificOrigins);
+        
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-
+        
         app.UseHttpsRedirection();
         app.MapControllers(); 
         app.UseAuthorization();
