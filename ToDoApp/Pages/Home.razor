@@ -7,20 +7,19 @@
 <h1>Hello, this is your Todo List app!</h1>
 Welcome to your new app.
 
-<ToDoItemForm OnChange="OnChange"/>
+<ToDoItemForm OnChangeCreate="OnChangeCreate"/>
 @if (todoItems == null)
 {     
    <p><em>Loading...</em></p>
 }
 else
 {
-  
-   foreach (var item in todoItems)
+   <div class="border" style="margin-top:20px;display:flex; flex-direction: column; gap: 40px">
+   @foreach (var item in todoItems)
    {
-      <div style="width: 280px;">@item.Text</div>
-      <div style="width: 280px;">@item.Deadline</div>
-      <div style="width: 280px;">@item.Completed</div>
+      <ToDoItemShow ItemDto="@item" OnChangeDelete="OnChangeDelete"  OnChangeUpdate="OnChangeUpdate"/>
    }
+   </div>
 }
 
 
@@ -35,11 +34,25 @@ else
    {
       todoItems = await _itemService.GetAllItems();
    }
-
-   private async Task OnChange()
+   
+   private async Task OnChangeCreate()
    {
       todoItems = await _itemService.GetAllItems();
       StateHasChanged();
    }
+   
+   
+   private async Task OnChangeDelete()
+   {
+      todoItems = await _itemService.GetAllItems();
+      StateHasChanged();
+   }
+
+   private async Task OnChangeUpdate()
+   {
+      todoItems = await _itemService.GetAllItems();
+      StateHasChanged();
+   }
+
 
 }

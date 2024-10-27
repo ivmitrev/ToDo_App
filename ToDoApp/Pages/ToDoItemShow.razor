@@ -1,0 +1,118 @@
+﻿@using Models.Dtos
+@using ToDoApp.Services
+@inject IItemService _itemService
+
+<EditForm Model="@UpdateItemDto" OnValidSubmit="@TaskUpdate">
+    <DataAnnotationsValidator/>
+    <div style="padding:20px;display: flex;gap: 20px;flex-direction: row;align-items: center">
+
+        <div>
+            @if (!editMode)
+            {
+                @if (ItemDto.Completed)
+                {
+                    <s>@ItemDto.Text</s>
+                }
+                else
+                {
+                    @ItemDto.Text
+                }
+            }
+            else
+            {
+                <ValidationMessage For="@(() => UpdateItemDto.Text)" style="height: 1.5em;"/>
+                <InputText @bind-Value="UpdateItemDto.Text" class="form-control"/>
+            }
+
+        </div>
+        <div>
+            @if (!editMode)
+            {
+                @ItemDto.Deadline
+            }
+            else
+            {
+                <ValidationMessage For="@(() => UpdateItemDto.Deadline)" style="height: 1.5em;"/>
+                <InputDate @bind-Value="UpdateItemDto.Deadline" class="form-control"/>
+            }
+        </div>
+        <div>
+            @if (!editMode)
+            {
+                @if (@ItemDto.Completed)
+                {
+                    <button class="btn btn-primary" onclick="@UncompleteTask">Uncomplete</button>
+                }
+                else
+                {
+                    <button class="btn btn-primary" onclick="@CompleteTask">Complete</button>
+                }
+            }
+            else
+            {
+                <div style="display: flex;flex-direction: row;gap: 20px">
+                    <button type="submit" class="btn btn-success">Save</button>
+                    <button class="btn btn-danger" onclick="@CancelChanges">Cancel</button>
+                </div>
+            }
+        </div>
+        <div>
+            @if (!editMode)
+            {
+                <button class="btn btn-danger" onclick="@TaskDelete">Delete</button>
+            }
+        </div>
+
+        <div>
+            @if (!editMode)
+            {
+                <button class="btn btn-warning" onclick="@EditMode">Update</button>
+            }
+        </div>
+
+    </div>
+</EditForm>
+
+@code {
+    [Parameter] public ToDoItemDto ItemDto { get; set; }
+    [Parameter] public EventCallback OnChangeDelete { get; set; }
+    [Parameter] public EventCallback OnChangeUpdate { get; set; }
+    bool editMode = false;
+
+    public UpdateItemToDoDto UpdateItemDto = new UpdateItemToDoDto();
+
+    public void EditMode()
+    {
+        editMode = true;
+    }
+    
+    public void CancelChanges()
+    {
+        editMode = false;
+    }
+
+    public void CompleteTask()
+    {
+        ItemDto.Completed = true;
+    }
+
+    public void UncompleteTask()
+    {
+        ItemDto.Completed = false;
+    }
+
+    public async Task TaskDelete()
+    {
+        await _itemService.DeleteItem(ItemDto.Id);
+        await OnChangeDelete.InvokeAsync();
+    }
+    
+    public async Task TaskUpdate()
+    {
+        editMode = false;
+        await _itemService.UpdateItem(ItemDto.Id, UpdateItemDto);
+        await OnChangeUpdate.InvokeAsync();
+
+    }
+
+}

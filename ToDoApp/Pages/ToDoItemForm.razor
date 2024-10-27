@@ -2,39 +2,51 @@
 @using ToDoApp.Services
 @inject IItemService _itemService
 
-<Editform Model="@NewTask">
-    <div style="display: flex;align-items: center;margin-top: 40px;padding-left:20px;padding-right: 20px;width: 700px">
-        <div style="margin-right:20px">Text: </div>
-        <InputText
-            @bind-Value="NewTask.Text"
-            class="form-control"/>
+<EditForm Model="@NewTask"  OnValidSubmit="@TaskAdded">
+    <DataAnnotationsValidator />
+    <div class="border" style="display: flex;gap:20px;align-items: center;margin-top: 20px;padding: 50px;padding-left:20px;padding-right: 20px;width: 100%">
+        <div style="">Text: </div>
+        <div style="display: flex;flex-direction: column">
+            <ValidationMessage For="@(() => NewTask.Text)" style="height: 1.5em;"/>
+            <InputText
+                @bind-Value="NewTask.Text"
+                class="form-control"/>
+        </div>
         <div style="margin-left:40px; margin-right: 20px">Deadline: </div>
-        <InputDate
-            @bind-Value="@NewTask.Deadline"
-            class="form-control"/>
-        <button onclick="@TaskAdded" class="btn btn-primary" value="Add" style="margin-left: 20px">Add</button>
-        <button onclick="@Clear" class="btn btn-secondary" style="margin-left: 15px;">Clear</button>
-        
+        <div style="display: flex;flex-direction: column">
+            <ValidationMessage For="@(() => NewTask.Deadline)" style="height: 1.5em;"/>
+            <InputDate
+                @bind-Value="@NewTask.Deadline"
+                class="form-control"/>
+        </div>
+        <div style="display: flex;flex-direction: row">
+            <button type="submit" class="btn btn-primary" value="Add" style="margin-left: 20px">Add</button>
+            <button onclick="@Clear" class="btn btn-secondary" style="margin-left: 15px;">Clear</button>
+        </div>
+
     </div>
 
-</Editform>
+</EditForm>
 
 @code 
 {
-    [Parameter] public EventCallback OnChange { get; set; }
+    [Parameter] public EventCallback OnChangeCreate { get; set; }
     private CreateItemToDoDto NewTask = new CreateItemToDoDto();
-
+    bool showValidationMessages = false;
+    
     public void Clear()
     {
         NewTask.Text = "";
         NewTask.Deadline = DateOnly.FromDateTime(DateTime.Now);
+        showValidationMessages = false; 
     }
-    
-    
+
     public async Task TaskAdded()
     {
+        showValidationMessages = true;
         await _itemService.CreateItem(NewTask);
-        await OnChange.InvokeAsync();
+        await OnChangeCreate.InvokeAsync();
+        Clear();
     }
 
 }

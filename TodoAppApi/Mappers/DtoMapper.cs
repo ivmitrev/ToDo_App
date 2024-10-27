@@ -14,6 +14,7 @@ public static class DtoMapper
     {
         return new ToDoItemDto()
         {
+            Id = item.Id,
             Text = item.Text,
             Deadline = item.Deadline,
             Completed = item.Completed
@@ -36,7 +37,7 @@ public static class DtoMapper
         {
             Text = updateItemToDoDto.Text,
             Deadline = updateItemToDoDto.Deadline,
-            Completed = updateItemToDoDto.Completed
+            //Completed = updateItemToDoDto.Completed
         };
     }
 

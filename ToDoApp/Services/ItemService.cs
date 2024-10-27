@@ -17,8 +17,7 @@ public class ItemService : IItemService
         try
         {
             var items = await this._httpClient.GetFromJsonAsync<IEnumerable<ToDoItemDto>>("api/items");
-            items.Reverse();
-            return items;
+            return items.Reverse();
         }
         catch (Exception e)
         {
@@ -83,7 +82,7 @@ public class ItemService : IItemService
     {
         try
         {
-            var response = await _httpClient.PatchAsJsonAsync($"api/items/{id}",updateItemToDoDto);
+            var response = await _httpClient.PutAsJsonAsync($"api/items/{id}",updateItemToDoDto);
             response.EnsureSuccessStatusCode();
             var updatedItem = await response.Content.ReadFromJsonAsync<ToDoItemDto>();
             return updatedItem;

@@ -6,7 +6,7 @@ public class ToDoItem
 {
     public int Id { get; set; }
     [Required]
-    [MinLength(1,ErrorMessage = "Title must be atleast 1 character")]
+    [MinLength(1,ErrorMessage = "Title must be at least 1 character")]
     [MaxLength(280,ErrorMessage = "Title cannot be over 280 charaters")]
     public string Text { get; set; }
     [DateInTheFuture]

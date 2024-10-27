@@ -8,6 +8,6 @@ public interface IItemService
     Task<ToDoItemDto> GetItemById(int id);
     Task<ToDoItemDto> CreateItem(CreateItemToDoDto createItemToDoDto);
     Task<ToDoItemDto> DeleteItem(int id);
-    //Task<ToDoItemDto> UpdateItem(int id);
-    
+    Task<ToDoItemDto> UpdateItem(int id, UpdateItemToDoDto updateItemToDoDto);
+
 }
